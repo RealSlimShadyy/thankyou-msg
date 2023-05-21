@@ -1,0 +1,33 @@
+name: Thank Contributors
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  thank_contributors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Contributors
+  run: |
+    contributors=$(curl -s "https://api.github.com/repos/RealSlimShadyy/os3/contributors" \
+      -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}")
+
+    # Extract relevant information from the contributors JSON response
+    # and store it in an environment variable
+    contributors_data=$(echo "$contributors" | jq '.[] | .login')
+    echo "::set-env name=CONTRIBUTORS::$contributors_data"
+
+      - name: Send Thank-You Messages
+        run: |
+          # Iterate over contributors and send thank-you messages
+          for contributor in $CONTRIBUTORS; do
+            # Use the social media API to send thank-you messages
+            # Example: Twitter API
+            # tweet "Thank you, $contributor, for your contribution to our project! 🙌"
+            echo "Thank you, $contributor, for your contribution to our project! 🙌"
+          done

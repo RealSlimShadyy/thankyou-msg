@@ -12,15 +12,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Fetch Contributors
+    - name: Fetch Contributors
   run: |
-    contributors=$(curl -s "https://api.github.com/repos/RealSlimShadyy/os3/contributors" \
+    contributors=$(curl -s "https://api.github.com/repos/{owner}/{repo}/contributors" \
       -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}")
 
     # Extract relevant information from the contributors JSON response
     # and store it in an environment variable
     contributors_data=$(echo "$contributors" | jq '.[] | .login')
-    echo "::set-env name=CONTRIBUTORS::$contributors_data"
+    echo "CONTRIBUTORS=$contributors_data" >> $GITHUB_ENV
+
 
       - name: Send Thank-You Messages
         run: |
